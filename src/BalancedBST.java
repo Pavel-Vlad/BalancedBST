@@ -30,27 +30,10 @@ class BalancedBST {
 
     // tree is balanced?
     public boolean IsBalanced(BSTNode root_node) {
-        Stack<BSTNode> stack = new Stack<>(); // for search in deep
-        stack.push(root_node);
-
-        int level = root_node.Level;
-        int maxLevel = level;
-
-        while (!stack.isEmpty()) {
-            BSTNode node = stack.pop();
-            if (node.Level > level) {
-                level = node.Level;
-            } else if (node.Level < level) {
-                maxLevel = level;
-                level = node.Level;
-            }
-            if (node.LeftChild != null)
-                stack.add(node.LeftChild);
-            if (node.RightChild != null)
-                stack.add(node.RightChild);
-        }
-
-        return Math.abs(maxLevel - level) <= 1;
+        if (root_node == null) return true;
+        int leftHeight = recursForIsBalanced(root_node.LeftChild);
+        int rightHeight = recursForIsBalanced(root_node.RightChild);
+        return Math.abs(leftHeight - rightHeight) <= 1;
     }
 
     private BSTNode recursForGenerateTree(BSTNode parentNode, int[] arr, int level) {
@@ -73,5 +56,11 @@ class BalancedBST {
         newNode.RightChild = recursForGenerateTree(newNode, arrRight, level);
 
         return newNode;
+    }
+
+    private int recursForIsBalanced(BSTNode node) {
+        // condition for end recursion
+        if (node == null) return 0;
+        return 1 + Math.max(recursForIsBalanced(node.LeftChild), recursForIsBalanced(node.RightChild));
     }
 }  
